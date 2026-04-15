@@ -493,14 +493,6 @@
   .brand-tab:hover { border-color: var(--accent); color: var(--accent); }
   .brand-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  .brand-tab {
-    font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em;
-    padding: 6px 16px; border-radius: 8px; border: 1px solid var(--border2);
-    background: var(--bg2); color: var(--muted); cursor: pointer;
-    transition: all 0.15s; font-weight: 500;
-  }
-  .brand-tab:hover { border-color: var(--accent); color: var(--accent); }
-  .brand-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -519,14 +511,6 @@
   <div style="display:flex;gap:6px;" id="brandTabs">
     <button class="brand-tab active" data-brand="Snitch" onclick="selectBrand('Snitch',this)">Snitch</button>
     <button class="brand-tab" data-brand="Rare Rabbit" onclick="selectBrand('Rare Rabbit',this)">Rare Rabbit</button>
-  </div>
-</div>
-
-<div style="padding: 20px 48px 0; display:flex; align-items:center; gap:12px;">
-  <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Brand</span>
-  <div style="display:flex;gap:6px;" id="brandTabs">
-    <button class="brand-tab active" onclick="selectBrand('Snitch',this)">Snitch</button>
-    <button class="brand-tab" onclick="selectBrand('Rare Rabbit',this)">Rare Rabbit</button>
   </div>
 </div>
 <div class="stats-bar">
