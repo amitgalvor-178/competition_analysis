@@ -529,26 +529,14 @@
 
 <div class="filter-section">
   <span class="filter-label">Filter</span>
-  <select id="fHookType">
-    <option value="">Hook Type</option>
-    <option>visual</option>
-    <option>both</option>
-    <option>text</option>
-  </select>
-  <select id="fStyleType">
-    <option value="">Person Style</option>
-    <option>influencer</option>
-    <option>ugc_authentic</option>
-    <option>model_aspirational</option>
-  </select>
-  <select id="fFormat">
-    <option value="">Format</option>
-    <option>mixed</option>
-    <option>product_showcase</option>
-    <option>b_roll_lifestyle</option>
-    <option>talking_head</option>
-    <option>storytelling</option>
-  </select>
+  <select id="fHookType"><option value="">Hook Type</option></select>
+  <select id="fHookStyle"><option value="">Hook Style</option></select>
+  <select id="fCtaStyle"><option value="">CTA Style</option></select>
+  <select id="fStyleType"><option value="">Person Style</option></select>
+  <select id="fEnergy"><option value="">Energy</option></select>
+  <select id="fPacing"><option value="">Pacing</option></select>
+  <select id="fLocation"><option value="">Location</option></select>
+  <select id="fFormat"><option value="">Format</option></select>
   <select id="fError">
     <option value="">Show All</option>
     <option value="ok">Analysed Only</option>
@@ -795,9 +783,32 @@ function toggleAnalysis(idx) {
   document.getElementById('body-'+idx).classList.toggle('open');
 }
 
+function populateFilters() {
+  const analysed = ADS.filter(d => d.analysis && !d.analysis.error);
+  function opts(id, vals) {
+    const sel = document.getElementById(id);
+    [...new Set(vals.filter(v => v && v !== 'none' && v !== 'null' && v !== 'unclear'))]
+      .sort()
+      .forEach(v => { const o = document.createElement('option'); o.value = o.textContent = v; sel.appendChild(o); });
+  }
+  opts('fHookType',  analysed.map(d => d.analysis?.hook?.type));
+  opts('fHookStyle', analysed.map(d => d.analysis?.hook?.style?.split(',')[0].trim()));
+  opts('fCtaStyle',  analysed.map(d => d.analysis?.cta?.style));
+  opts('fStyleType', analysed.map(d => d.analysis?.person?.style_type));
+  opts('fEnergy',    analysed.map(d => d.analysis?.person?.energy));
+  opts('fPacing',    analysed.map(d => d.analysis?.content?.pacing));
+  opts('fLocation',  analysed.map(d => d.analysis?.location?.primary));
+  opts('fFormat',    analysed.map(d => d.analysis?.content?.format));
+}
+
 function getFiltered() {
   const hookType  = document.getElementById('fHookType').value;
+  const hookStyle = document.getElementById('fHookStyle').value;
+  const ctaStyle  = document.getElementById('fCtaStyle').value;
   const styleType = document.getElementById('fStyleType').value;
+  const energy    = document.getElementById('fEnergy').value;
+  const pacing    = document.getElementById('fPacing').value;
+  const location  = document.getElementById('fLocation').value;
   const format    = document.getElementById('fFormat').value;
   const errMode   = document.getElementById('fError').value;
   const sortMode  = document.getElementById('fSort').value;
@@ -806,7 +817,12 @@ function getFiltered() {
   if (errMode === 'ok')  data = data.filter(d => !d.analysis?.error);
   if (errMode === 'err') data = data.filter(d =>  d.analysis?.error);
   if (hookType)  data = data.filter(d => d.analysis?.hook?.type === hookType);
+  if (hookStyle) data = data.filter(d => d.analysis?.hook?.style?.split(',')[0].trim() === hookStyle);
+  if (ctaStyle)  data = data.filter(d => d.analysis?.cta?.style === ctaStyle);
   if (styleType) data = data.filter(d => d.analysis?.person?.style_type === styleType);
+  if (energy)    data = data.filter(d => d.analysis?.person?.energy === energy);
+  if (pacing)    data = data.filter(d => d.analysis?.content?.pacing === pacing);
+  if (location)  data = data.filter(d => d.analysis?.location?.primary === location);
   if (format)    data = data.filter(d => d.analysis?.content?.format === format);
 
   data.sort((a,b) => {
@@ -829,6 +845,7 @@ function render() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────
+populateFilters();
 renderStats();
 renderInsights();
 render();
